@@ -1,34 +1,63 @@
 import React, {Component} from 'react';
-import {ScrollView, View} from 'react-native';
-import {Text, Badge} from 'react-native-elements';
+import {ScrollView, View, Dimensions, pagingEnabled} from 'react-native';
+import {Text, Button} from 'react-native-elements';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class Slides extends Component{
 
+  renderLastSlide(index){
+    if(index === this.props.data.length -1){
+      return(
+        <Button
+          title ="Onwards"
+          raised
+          buttonStyle ={styles.buttonStyle}
+          onPress = {this.props.onComplete}
+        />
+      );
+    }
+  }
+
   renderSlides(){
-      return this.props.data.map((slide) => {
+      return this.props.data.map((slide, index) => {
         return (
             <View
-              style={{alignItems:'center', justifyContent:'center'}}
-               key={slide.text}>
-              <Badge
-                containerStyle={{ backgroundColor: 'violet'}} >
-                 <Text h4>{slide.text}</Text>
-              </Badge>
+               key={slide.text}
+               style={[styles.slideStyle, { backgroundColor: slide.color }]}
+              >
+                 <Text h4 style={styles.textStyle}>{slide.text}</Text>
+                 {this.renderLastSlide(index)}
             </View>
               );
           });
     }
 
   render(){
-    // console.log(this.props)
     return(
       <ScrollView
         horizontal
         style={{flex:1}}
+        pagingEnabled
       >
         {this.renderSlides()}
       </ScrollView>
     )
+  }
+}
+
+const styles ={
+  slideStyle :{
+    alignItems:'center',
+      justifyContent:'center',
+      width:SCREEN_WIDTH
+  },
+  textStyle :{
+    color : 'white'
+  },
+  buttonStyle :{
+    marginTop : 10,
+    backgroundColor : "#0288D1"
   }
 }
 
